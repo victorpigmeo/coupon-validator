@@ -4,6 +4,7 @@ import dev.pigmeo.couponvalidator.application.dto.coupon.CouponRedeemRequest;
 import dev.pigmeo.couponvalidator.application.dto.coupon.CouponRedeemResponse;
 import dev.pigmeo.couponvalidator.application.mappers.CouponMapper;
 import dev.pigmeo.couponvalidator.domain.services.CouponService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,8 @@ public class CouponController {
     }
 
     @PostMapping("/redeem")
-    public ResponseEntity<CouponRedeemResponse> redeemCoupon(@RequestBody CouponRedeemRequest couponRedeemRequest) {
+    public ResponseEntity<CouponRedeemResponse> redeemCoupon(
+            @Valid @RequestBody CouponRedeemRequest couponRedeemRequest) {
         return ResponseEntity.ok(
                 couponMapper.toRedeemResponse(
                         couponService.redeemCoupon(
