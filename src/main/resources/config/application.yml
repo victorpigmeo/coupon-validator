@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: coupon-validator
+
+  datasource:
+    url: jdbc:postgresql://${DATABASE_URL:localhost:5432}/couponvalidator
+    username: ${DATABASE_USER:sa_couponvalidator}
+    password: ${DATABASE_PASSWORD:sa_couponvalidator}
+    hikari:
+      maximum-pool-size: 40
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      Jakarta:
+        persistence:
+          lock:
+            timeout: 2000
+
+  flyway:
+    enabled: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: sa_couponvalidator
+
+server:
+#  tomcat:
+#    threads:
+#      max: 200
+#    accept-count: 200
+  port: 8080
+
+management:
+   server:
+     port: 8081
+   endpoints:
+     web:
+       exposure:
+         include: ["health", "metrics"]

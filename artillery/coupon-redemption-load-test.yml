@@ -1,0 +1,33 @@
+config:
+  target: http://localhost:8080
+  phases:
+    - duration: 10
+      arrivalRate: 30
+      name: Pool warmup
+    - duration: 20
+      arrivalRate: 200
+      name: High load spike
+#    - duration: 10
+#      arrivalRate: 50
+#      rampTo: 100
+#      name: Ramp up load
+#    - duration: 10
+#      arrivalRate: 200
+#      rampTo: 500
+#      name: spike phase
+  plugins:
+    ensure:
+      thresholds:
+        - http.response_time.p99: 100
+        - http.response_time.p95: 80
+    apdex:
+      threshold: 100
+    metrics-by-endpoint: {}
+scenarios:
+  - flow:
+      - post:
+          url: "/v1/coupons/redeem"
+          json:
+            tier: "PAID"
+            amount: 100.00
+            couponCode: "SUMMER26"

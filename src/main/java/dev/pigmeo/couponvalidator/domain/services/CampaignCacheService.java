@@ -1,0 +1,72 @@
+package dev.pigmeo.couponvalidator.domain.services;
+
+import dev.pigmeo.couponvalidator.domain.entities.campaign.Campaign;
+import dev.pigmeo.couponvalidator.domain.exceptions.CampaignNotFoundException;
+import dev.pigmeo.couponvalidator.infrastructure.repositories.campaign.CampaignRepository;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.integration.support.locks.LockRegistry;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.locks.Lock;
+
+@Service
+public class CampaignCacheService {
+
+    private final CampaignRepository campaignRepository;
+    private final LockRegistry lockRegistry;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public CampaignCacheService(
+            CampaignRepository campaignRepository,
+            LockRegistry lockRegistry,
+            RedisTemplate<String, Object> redisTemplate
+    ) {
+        this.campaignRepository = campaignRepository;
+        this.lockRegistry = lockRegistry;
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Transactional
+    @Cacheable(cacheNames = "campaigns", key = "#couponCode")
+    public Campaign findByCouponCode(String couponCode) {
+        return this.campaignRepository.findByCouponCodeWithLock(couponCode)
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
+    }
+
+    public void updateCachedRedemptionCount(Campaign campaign) {
+        Lock lock = lockRegistry.obtain("campaign-write:" + campaign.getCouponCode());
+        lock.lock();
+        try {
+            this.redisTemplate.opsForValue()
+                    .set("campaigns::" + campaign.getCouponCode(), campaign);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Long incrementCacheCampaignCounter(Campaign campaign) {
+        final String campaignCounterRedisKey = "campaigns:redemptionCount:" + campaign.getCouponCode();
+
+        return this.redisTemplate.opsForValue().increment(campaignCounterRedisKey);
+    }
+
+    public Long incrementCacheCustomerCounter(Long customerId) {
+        final String customerCounterRedisKey = "campaigns:customerRedemptionCount:" + customerId;
+
+        return this.redisTemplate.opsForValue().increment(customerCounterRedisKey);
+    }
+
+    public void decrementCacheCampaignCounter(Campaign campaign) {
+        final String campaignCounterRedisKey = "campaigns:redemptionCount:" + campaign.getCouponCode();
+
+        this.redisTemplate.opsForValue().decrement(campaignCounterRedisKey);
+    }
+
+    public void decrementCacheCustomerCounter(Long customerId) {
+        final String customerCounterRedisKey = "campaigns:customerRedemptionCount:" + customerId;
+
+        this.redisTemplate.opsForValue().decrement(customerCounterRedisKey);
+    }
+}

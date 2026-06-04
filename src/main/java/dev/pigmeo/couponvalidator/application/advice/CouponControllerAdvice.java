@@ -1,0 +1,40 @@
+package dev.pigmeo.couponvalidator.application.advice;
+
+import dev.pigmeo.couponvalidator.application.dto.ErrorResponse;
+import dev.pigmeo.couponvalidator.domain.exceptions.CampaignDatesOutOfBoundsException;
+import dev.pigmeo.couponvalidator.domain.exceptions.CampaignNotFoundException;
+import dev.pigmeo.couponvalidator.domain.exceptions.CouponsOnlyOnPaidPlansException;
+import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsPerCustomerExccededException;
+import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsReachedException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class CouponControllerAdvice {
+
+    @ExceptionHandler(CouponsOnlyOnPaidPlansException.class)
+    public ResponseEntity<ErrorResponse> handle(CouponsOnlyOnPaidPlansException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(CampaignNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handle(CampaignNotFoundException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(MaxRedemptionsReachedException.class)
+    public ResponseEntity<ErrorResponse> handle(MaxRedemptionsReachedException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(MaxRedemptionsPerCustomerExccededException.class)
+    public ResponseEntity<ErrorResponse> handle(MaxRedemptionsPerCustomerExccededException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(CampaignDatesOutOfBoundsException.class)
+    public ResponseEntity<ErrorResponse> handle(CampaignDatesOutOfBoundsException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    }
+}
