@@ -31,8 +31,12 @@ public class CampaignCacheService {
     @Transactional
     @Cacheable(cacheNames = "campaigns", key = "#couponCode")
     public Campaign findByCouponCode(String couponCode) {
-        return this.campaignRepository.findByCouponCodeWithLock(couponCode)
+        Campaign campaign = this.campaignRepository.findByCouponCodeWithLock(couponCode)
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
+
+        redisTemplate.opsForValue()
+                .set("campaigns:redemptionCount:" + campaign.getCouponCode(), campaign.getRedemptionCount());
+        return campaign;
     }
 
     public void updateCachedRedemptionCount(Campaign campaign) {

@@ -6,8 +6,6 @@ spring:
     url: jdbc:postgresql://${DATABASE_URL:localhost:5432}/couponvalidator
     username: ${DATABASE_USER:sa_couponvalidator}
     password: ${DATABASE_PASSWORD:sa_couponvalidator}
-    hikari:
-      maximum-pool-size: 40
 
   jpa:
     hibernate:
@@ -28,10 +26,6 @@ spring:
       password: sa_couponvalidator
 
 server:
-#  tomcat:
-#    threads:
-#      max: 200
-#    accept-count: 200
   port: 8080
 
 management:

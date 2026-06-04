@@ -10,8 +10,7 @@ CREATE TABLE couponvalidator.campaign
     max_redemptions          INT          not null,
     redemption_count         INT          not null,
     per_customer_redemptions SMALLINT     not null,
-    discount_percentage      SMALLINT     not null,
-    counter smallint not null default 0
+    discount_percentage      SMALLINT     not null
 );
 
 CREATE TABLE couponvalidator.coupon_redemption

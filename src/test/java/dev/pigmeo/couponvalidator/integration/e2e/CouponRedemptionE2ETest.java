@@ -93,7 +93,6 @@ public class CouponRedemptionE2ETest extends CouponValidatorBaseIntegrationTest 
                         request,
                         ErrorResponse.class);
 
-
         assertThat(response.getStatusCode().value()).isEqualTo(400);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().message()).isEqualTo("Coupons are only for paid plans");
