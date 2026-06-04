@@ -3,5 +3,5 @@ INSERT INTO couponvalidator.campaign
  per_customer_redemptions, redemption_count, discount_percentage)
 VALUES (1, 'Test campaign',
         NOW() - INTERVAL '1 day', NOW() + INTERVAL '1 day',
-        'SUMMER26', 1000, 1,
+        'SUMMER26', 30, 1,
         0, 10);

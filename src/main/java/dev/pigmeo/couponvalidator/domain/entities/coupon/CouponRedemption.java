@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -59,7 +60,10 @@ public class CouponRedemption {
         this.customerId = customerId;
         this.redeem_confirmed = false;
         this.originalAmount = originalAmount;
-        this.discountedAmount = originalAmount.multiply(new BigDecimal(discountPercentage)).movePointLeft(2);
+        this.discountedAmount = originalAmount
+                .multiply(new BigDecimal(discountPercentage))
+                .movePointLeft(2)
+                .setScale(2, RoundingMode.DOWN);
         this.discountPercentage = discountPercentage;
         this.campaign = campaign;
     }
