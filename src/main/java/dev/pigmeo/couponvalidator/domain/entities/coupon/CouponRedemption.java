@@ -23,16 +23,16 @@ public class CouponRedemption {
     private Long id;
 
     @Column(name = "redeemed_at")
-    private Instant redeemed_at;
+    private Instant redeemedAt;
 
     @Column(name = "expires_at")
-    private Instant expires_at;
+    private Instant expiresAt;
 
     @Column(name = "customer_id")
     private Long customerId;
 
     @Column(name = "redeem_confirmed")
-    private boolean redeem_confirmed;
+    private boolean redeemConfirmed;
 
     @Column(name = "original_amount")
     private BigDecimal originalAmount;
@@ -55,10 +55,10 @@ public class CouponRedemption {
             Campaign campaign
     ){
         Instant now = Instant.now();
-        this.redeemed_at = now;
-        this.expires_at = now.plus(15, ChronoUnit.MINUTES);
+        this.redeemedAt = now;
+        this.expiresAt = now.plus(15, ChronoUnit.MINUTES);
         this.customerId = customerId;
-        this.redeem_confirmed = false;
+        this.redeemConfirmed = false;
         this.originalAmount = originalAmount;
         this.discountedAmount = originalAmount
                 .multiply(new BigDecimal(discountPercentage))
