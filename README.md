@@ -75,6 +75,7 @@ This endpoint is used to redeem a coupon
   "discountPercentage": short
 }
 ```
+* `discountedAmount` is the total discount amount, not the total amount - discount
 
 ### Error responses
 
