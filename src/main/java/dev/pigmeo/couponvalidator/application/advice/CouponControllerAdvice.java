@@ -4,7 +4,7 @@ import dev.pigmeo.couponvalidator.application.dto.ErrorResponse;
 import dev.pigmeo.couponvalidator.domain.exceptions.CampaignDatesOutOfBoundsException;
 import dev.pigmeo.couponvalidator.domain.exceptions.CampaignNotFoundException;
 import dev.pigmeo.couponvalidator.domain.exceptions.CouponsOnlyOnPaidPlansException;
-import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsPerCustomerExccededException;
+import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsPerCustomerExceededException;
 import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsReachedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,8 +28,8 @@ public class CouponControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 
-    @ExceptionHandler(MaxRedemptionsPerCustomerExccededException.class)
-    public ResponseEntity<ErrorResponse> handle(MaxRedemptionsPerCustomerExccededException exception) {
+    @ExceptionHandler(MaxRedemptionsPerCustomerExceededException.class)
+    public ResponseEntity<ErrorResponse> handle(MaxRedemptionsPerCustomerExceededException exception) {
         return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 

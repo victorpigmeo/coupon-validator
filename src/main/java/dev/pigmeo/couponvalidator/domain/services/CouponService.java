@@ -4,7 +4,7 @@ import dev.pigmeo.couponvalidator.domain.entities.campaign.Campaign;
 import dev.pigmeo.couponvalidator.domain.entities.coupon.CouponRedemption;
 import dev.pigmeo.couponvalidator.domain.exceptions.CampaignDatesOutOfBoundsException;
 import dev.pigmeo.couponvalidator.domain.exceptions.CouponsOnlyOnPaidPlansException;
-import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsPerCustomerExccededException;
+import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsPerCustomerExceededException;
 import dev.pigmeo.couponvalidator.domain.exceptions.MaxRedemptionsReachedException;
 import dev.pigmeo.couponvalidator.domain.models.coupon.CouponRedeemCommand;
 import dev.pigmeo.couponvalidator.domain.models.subscription.Tier;
@@ -51,7 +51,7 @@ public class CouponService {
 
         if (newCustomerCount > campaignCachedMetadata.getPerCustomerRedemptions()) {
             this.campaignCacheService.decrementCacheCustomerCounter(couponRedeemCommand.customerId());
-            throw new MaxRedemptionsPerCustomerExccededException("This customer already use all his coupons");
+            throw new MaxRedemptionsPerCustomerExceededException("This customer already use all his coupons");
         }
 
         this.asyncCouponService.createCouponRedemption(couponRedeemCommand);
