@@ -13,8 +13,7 @@ public class CouponMapper {
         return new CouponRedeemResponse(
                 couponRedemption.getOriginalAmount(),
                 couponRedemption.getDiscountedAmount(),
-                couponRedemption.getDiscountPercentage(),
-                couponRedemption.getCampaign().getRedemptionCount()
+                couponRedemption.getDiscountPercentage()
         );
     }
 
