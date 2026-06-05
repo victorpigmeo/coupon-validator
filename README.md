@@ -21,7 +21,8 @@ This project follows a layered architecture with a bit more independence on the 
 ## Data Model
 
 ![datamodel](imgs/datamodel.png)
-The only index needed was coupon_code, which is the main field which the system uses to query campaigns.
+* The only index needed was coupon_code, which is the main field which the system uses to query campaigns.
+* coupon_code is also unique, so we can't have two campaigns with the same coupon code
 
 # Handling concurrency
 ## How

@@ -6,7 +6,7 @@ CREATE TABLE couponvalidator.campaign
     name                     VARCHAR(255) not null,
     start_date               TIMESTAMPTZ  not null,
     end_date                 TIMESTAMPTZ  not null,
-    coupon_code              VARCHAR(10)  not null,
+    coupon_code              VARCHAR(10)  unique not null,
     max_redemptions          INT          not null,
     redemption_count         INT          not null,
     per_customer_redemptions SMALLINT     not null,

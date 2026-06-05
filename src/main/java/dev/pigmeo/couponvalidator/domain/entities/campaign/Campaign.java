@@ -30,7 +30,7 @@ public class Campaign implements Serializable {
     @Column(name = "end_date")
     private Instant endDate;
 
-    @Column(name = "coupon_code")
+    @Column(name = "coupon_code", unique = true)
     private String couponCode;
 
     @Column(name = "max_redemptions")
