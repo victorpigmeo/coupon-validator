@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 public record CouponRedeemRequest(
         @NotNull Tier tier,
         @NotNull BigDecimal amount,
-        @NotEmpty @Size(min = 1, max = 12) String couponCode,
+        @NotEmpty @Size(min = 1, max = 10) String couponCode,
         @NotNull Long customerId
 ) { }
