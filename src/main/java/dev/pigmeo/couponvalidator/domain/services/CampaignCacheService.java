@@ -14,6 +14,11 @@ import java.util.concurrent.locks.Lock;
 @Service
 public class CampaignCacheService {
 
+    private final static String CAMPAIGN_CACHE_LOCK_KEY = "campaign-write:";
+    private final static String CAMPAIGNS_CACHE_KEY_PREFIX = "campaigns::";
+    private final static String CAMPAIGN_COUNTER_CACHE_KEY_PREFIX = "campaigns:redemptionCount:";
+    private final static String CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX =  "campaigns:customerRedemptionCount:";
+
     private final CampaignRepository campaignRepository;
     private final LockRegistry lockRegistry;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -35,23 +40,23 @@ public class CampaignCacheService {
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
 
         redisTemplate.opsForValue()
-                .set("campaigns:redemptionCount:" + campaign.getCouponCode(), campaign.getRedemptionCount());
+                .set(CAMPAIGN_COUNTER_CACHE_KEY_PREFIX + campaign.getCouponCode(), campaign.getRedemptionCount());
         return campaign;
     }
 
     public void updateCachedRedemptionCount(Campaign campaign) {
-        Lock lock = lockRegistry.obtain("campaign-write:" + campaign.getCouponCode());
+        Lock lock = lockRegistry.obtain(CAMPAIGN_CACHE_LOCK_KEY + campaign.getCouponCode());
         lock.lock();
         try {
             this.redisTemplate.opsForValue()
-                    .set("campaigns::" + campaign.getCouponCode(), campaign);
+                    .set(CAMPAIGNS_CACHE_KEY_PREFIX + campaign.getCouponCode(), campaign);
         } finally {
             lock.unlock();
         }
     }
 
     public Long incrementCacheCampaignCounter(Campaign campaign) {
-        final String campaignCounterRedisKey = "campaigns:redemptionCount:" + campaign.getCouponCode();
+        final String campaignCounterRedisKey = CAMPAIGN_COUNTER_CACHE_KEY_PREFIX + campaign.getCouponCode();
 
         return this.redisTemplate.opsForValue().increment(campaignCounterRedisKey);
     }
@@ -63,13 +68,13 @@ public class CampaignCacheService {
     }
 
     public void decrementCacheCampaignCounter(Campaign campaign) {
-        final String campaignCounterRedisKey = "campaigns:redemptionCount:" + campaign.getCouponCode();
+        final String campaignCounterRedisKey = CAMPAIGN_COUNTER_CACHE_KEY_PREFIX + campaign.getCouponCode();
 
         this.redisTemplate.opsForValue().decrement(campaignCounterRedisKey);
     }
 
     public void decrementCacheCustomerCounter(Long customerId) {
-        final String customerCounterRedisKey = "campaigns:customerRedemptionCount:" + customerId;
+        final String customerCounterRedisKey = CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX + customerId;
 
         this.redisTemplate.opsForValue().decrement(customerCounterRedisKey);
     }
