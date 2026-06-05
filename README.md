@@ -45,6 +45,11 @@ This project follows a layered architecture with a bit more independence on the 
 * PerCustomerRedemptions will be always smaller then max_redemptions
 * Redemptions expires 15 minutes after the creation if a purchase is not confirmed via command/queue/topic
 
+# How to run the project
+* Dependencies: Docker, Gradle, Java 17
+* First run `docker compose up -d` to create the necessary containers from the docker-compose file (Postgres, Redis)
+* `./gradlew bootRun` to start the application
+
 # Api contracts
 
 ## `POST /v1/coupons/redeem`
