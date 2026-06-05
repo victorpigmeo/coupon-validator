@@ -3,6 +3,8 @@ package dev.pigmeo.couponvalidator.domain.services;
 import dev.pigmeo.couponvalidator.domain.entities.campaign.Campaign;
 import dev.pigmeo.couponvalidator.domain.exceptions.CampaignNotFoundException;
 import dev.pigmeo.couponvalidator.infrastructure.repositories.campaign.CampaignRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.integration.support.locks.LockRegistry;
@@ -13,6 +15,8 @@ import java.util.concurrent.locks.Lock;
 
 @Service
 public class CampaignCacheService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CouponService.class);
 
     private final static String CAMPAIGN_CACHE_LOCK_KEY = "campaign-write:";
     private final static String CAMPAIGNS_CACHE_KEY_PREFIX = "campaigns::";
@@ -36,6 +40,7 @@ public class CampaignCacheService {
     @Transactional
     @Cacheable(cacheNames = "campaigns", key = "#couponCode")
     public Campaign findByCouponCode(String couponCode) {
+        logger.warn("Cache miss for campaign: [couponCode: {}]", couponCode);
         Campaign campaign = this.campaignRepository.findByCouponCodeWithLock(couponCode)
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
 
@@ -63,7 +68,7 @@ public class CampaignCacheService {
 
     public Long incrementCacheCustomerCounter(Long customerId, String couponCode) {
         final String customerCounterRedisKey =
-                CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX + couponCode + ":" + customerId;
+                CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX + ":" + couponCode + ":" + customerId;
 
         return this.redisTemplate.opsForValue().increment(customerCounterRedisKey);
     }
