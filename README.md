@@ -120,10 +120,8 @@ This endpoint creates a new campaign
 {
   "id": Long,
   "name": String,
-  "startDate": ISO-8601
-  DateTime,
-  "endDate": ISO-8601
-  DateTime,
+  "startDate": ISO-8601 DateTime,
+  "endDate": ISO-8601 DateTime,
   "couponCode": String,
   "maxRedemptions": Int,
   "perCustomerRedemptions": Int,
