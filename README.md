@@ -152,7 +152,7 @@ This endpoint provides metrics about specific campaigns
 
 # Things that I would do with more time
 
-* Tune the application to handle more throughput
+* Implement an idempotency mechanism to avoid double-redemption
 * Implement a fallback flow direct to the DB in case redis has any issues
 * Implement retry mechanisms to avoid loosing redemptions if the db is slow
 * Implement a better cache warm up to avoid allowing users to redem more than the allowed coupons
