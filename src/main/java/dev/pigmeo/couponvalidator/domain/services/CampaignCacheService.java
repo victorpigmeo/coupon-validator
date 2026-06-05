@@ -61,8 +61,9 @@ public class CampaignCacheService {
         return this.redisTemplate.opsForValue().increment(campaignCounterRedisKey);
     }
 
-    public Long incrementCacheCustomerCounter(Long customerId) {
-        final String customerCounterRedisKey = "campaigns:customerRedemptionCount:" + customerId;
+    public Long incrementCacheCustomerCounter(Long customerId, String couponCode) {
+        final String customerCounterRedisKey =
+                CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX + couponCode + ":" + customerId;
 
         return this.redisTemplate.opsForValue().increment(customerCounterRedisKey);
     }

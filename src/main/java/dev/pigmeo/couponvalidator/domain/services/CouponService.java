@@ -47,7 +47,8 @@ public class CouponService {
         }
 
         final Long newCustomerCount =
-                this.campaignCacheService.incrementCacheCustomerCounter(couponRedeemCommand.customerId());
+                this.campaignCacheService.incrementCacheCustomerCounter(
+                        couponRedeemCommand.customerId(), campaignCachedMetadata.getCouponCode());
 
         if (newCustomerCount > campaignCachedMetadata.getPerCustomerRedemptions()) {
             this.campaignCacheService.decrementCacheCustomerCounter(couponRedeemCommand.customerId());
