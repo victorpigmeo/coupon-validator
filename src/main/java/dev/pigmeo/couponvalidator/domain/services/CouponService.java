@@ -39,13 +39,6 @@ public class CouponService {
             throw new CampaignDatesOutOfBoundsException("This campaign didn't started yet, or is already over");
         }
 
-        final Long newCampaignCount = this.campaignCacheService.incrementCacheCampaignCounter(campaignCachedMetadata);
-
-        if (newCampaignCount != null && newCampaignCount > campaignCachedMetadata.getMaxRedemptions()) {
-            this.campaignCacheService.decrementCacheCampaignCounter(campaignCachedMetadata);
-            throw new MaxRedemptionsReachedException("This campaign reached its maximum redemption");
-        }
-
         final Long newCustomerCount =
                 this.campaignCacheService.incrementCacheCustomerCounter(
                         couponRedeemCommand.customerId(), campaignCachedMetadata.getCouponCode());
@@ -53,6 +46,13 @@ public class CouponService {
         if (newCustomerCount > campaignCachedMetadata.getPerCustomerRedemptions()) {
             this.campaignCacheService.decrementCacheCustomerCounter(couponRedeemCommand.customerId());
             throw new MaxRedemptionsPerCustomerExceededException("This customer already use all his coupons");
+        }
+
+        final Long newCampaignCount = this.campaignCacheService.incrementCacheCampaignCounter(campaignCachedMetadata);
+
+        if (newCampaignCount != null && newCampaignCount > campaignCachedMetadata.getMaxRedemptions()) {
+            this.campaignCacheService.decrementCacheCampaignCounter(campaignCachedMetadata);
+            throw new MaxRedemptionsReachedException("This campaign reached its maximum redemption");
         }
 
         this.asyncCouponService.createCouponRedemption(couponRedeemCommand);
