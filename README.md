@@ -21,6 +21,7 @@ This project follows a layered architecture with a bit more independence on the 
 ## Data Model
 
 ![datamodel](imgs/datamodel.png)
+The only index needed was coupon_code, which is the main field which the system uses to query campaigns.
 
 # Handling concurrency
 ## How
@@ -37,7 +38,6 @@ This project follows a layered architecture with a bit more independence on the 
 * Pessimistic write lock on every cache miss, we can guarantee to have the most updated information on the cache, but we might have high latency if the Redis cluster is struggling
 ## What if the system fails?
 * At this point the application would crash, this service needs a retry mechanism for the async db operations, and a fallback flow in case Redis is not available
-* Using Redis sentinel in production might help on Redis availability
 
 # Assumptions
 * At the moment of redeem, the user is already registered
@@ -69,7 +69,8 @@ This endpoint is used to redeem a coupon
 
 ### Constraints
 
-* Tier is one of two values (PAID, TRIAL)
+* `tier` is one of two values (PAID, TRIAL)
+* `couponCode` Should be a string with 10 max chars
 
 ### Response
 
@@ -117,7 +118,7 @@ This endpoint creates a new campaign
 ### Constraints
 
 * `name` Should be a string with 255 max chars
-* `couponCode` Should be a string with 12 max chars
+* `couponCode` Should be a string with 10 max chars
 
 ### Response
 
@@ -153,6 +154,7 @@ This endpoint provides metrics about specific campaigns
 # Things that I would do with more time
 
 * Implement an idempotency mechanism to avoid double-redemption
+* Only counts the confirmed redemptions on users quota (Redemption succeed, but signup fails)
 * Implement a fallback flow direct to the DB in case redis has any issues
 * Implement retry mechanisms to avoid loosing redemptions if the db is slow
 * Implement a better cache warm up to avoid allowing users to redem more than the allowed coupons
