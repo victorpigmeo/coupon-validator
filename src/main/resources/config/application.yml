@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://${DATABASE_URL:localhost:5432}/couponvalidator
-    username: ${DATABASE_USER:sa_couponvalidator}
-    password: ${DATABASE_PASSWORD:sa_couponvalidator}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -23,7 +23,7 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: sa_couponvalidator
+      password: ${REDIS_PASSWORD}
 
 server:
   port: 8080
