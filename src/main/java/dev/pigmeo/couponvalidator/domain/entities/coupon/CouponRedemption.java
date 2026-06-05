@@ -37,8 +37,8 @@ public class CouponRedemption {
     @Column(name = "original_amount")
     private BigDecimal originalAmount;
 
-    @Column(name = "discounted_amount")
-    private BigDecimal discountedAmount;
+    @Column(name = "discount")
+    private BigDecimal discount;
 
     @Column(name = "discount_percentage")
     private short discountPercentage;
@@ -60,7 +60,7 @@ public class CouponRedemption {
         this.customerId = customerId;
         this.redeemConfirmed = false;
         this.originalAmount = originalAmount;
-        this.discountedAmount = originalAmount
+        this.discount = originalAmount
                 .multiply(new BigDecimal(discountPercentage))
                 .movePointLeft(2)
                 .setScale(2, RoundingMode.DOWN);
@@ -76,8 +76,8 @@ public class CouponRedemption {
         return originalAmount;
     }
 
-    public BigDecimal getDiscountedAmount() {
-        return discountedAmount;
+    public BigDecimal getDiscount() {
+        return discount;
     }
 
     public short getDiscountPercentage(){

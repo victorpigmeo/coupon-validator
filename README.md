@@ -78,11 +78,10 @@ This endpoint is used to redeem a coupon
 ```json
 {
   "originalAmount": BigDecimal,
-  "discountedAmount": BigDecimal,
+  "discount": BigDecimal,
   "discountPercentage": short
 }
 ```
-* `discountedAmount` is the total discount amount, not the total amount - discount
 
 ### Error responses
 
