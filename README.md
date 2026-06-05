@@ -112,7 +112,7 @@ This endpoint creates a new campaign
   "couponCode": String,
   "maxRedemptions": Int,
   "perCustomerRedemptions": Int,
-  "dicountPercentage": Int
+  "discountPercentage": Int
 }
 ```
 
@@ -132,7 +132,7 @@ This endpoint creates a new campaign
   "couponCode": String,
   "maxRedemptions": Int,
   "perCustomerRedemptions": Int,
-  "dicountPercentage": Int
+  "discountPercentage": Int
 }
 ```
 
@@ -157,8 +157,7 @@ This endpoint provides metrics about specific campaigns
 * Implement an idempotency mechanism to avoid double-redemption
 * Only counts the confirmed redemptions on users quota (Redemption succeed, but signup fails)
 * Implement a fallback flow direct to the DB in case redis has any issues
-* Implement retry mechanisms to avoid loosing redemptions if the db is slow
-* Implement a better cache warm up to avoid allowing users to redem more than the allowed coupons
-* Add a response code to give better feedback
+* Implement retry mechanisms to avoid loosing redemptions if the db is slow or fails
+* Implement a better cache warm up to avoid allowing users to redem more than the allowed coupons (Stale db counter)
 * Calculate timezones to be able to manage worldwide campaigns
 * Implement a multi coupon campaign
