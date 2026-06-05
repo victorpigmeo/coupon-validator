@@ -42,7 +42,7 @@ public class CouponService {
                 this.campaignCacheService.findByCouponCode(couponRedeemCommand.couponCode());
 
         if (now.isBefore(campaignCachedMetadata.getStartDate()) || now.isAfter(campaignCachedMetadata.getEndDate())) {
-            logger.error("Outside campaign start/end date: [couponCode: {}]", couponRedeemCommand.couponCode());
+            logger.error("Outside campaign start/end date: [couponCode: {}]", campaignCachedMetadata.getCouponCode());
             throw new CampaignDatesOutOfBoundsException("This campaign didn't started yet, or is already over");
         }
 
@@ -52,8 +52,9 @@ public class CouponService {
 
         if (newCustomerCount > campaignCachedMetadata.getPerCustomerRedemptions()) {
             logger.error("Customer exceeded redemption quota: [couponCode: {}, customer: {}]",
-                    couponRedeemCommand.couponCode(), couponRedeemCommand.customerId());
-            this.campaignCacheService.decrementCacheCustomerCounter(couponRedeemCommand.customerId());
+                    campaignCachedMetadata.getCouponCode(), couponRedeemCommand.customerId());
+            this.campaignCacheService.decrementCacheCustomerCounter(
+                    couponRedeemCommand.customerId(), campaignCachedMetadata.getCouponCode());
             throw new MaxRedemptionsPerCustomerExceededException("This customer already use all his coupons");
         }
 
@@ -62,6 +63,8 @@ public class CouponService {
         if (newCampaignCount != null && newCampaignCount > campaignCachedMetadata.getMaxRedemptions()) {
             logger.error("Campaign exceeded redemption quota: [couponCode: {}]", couponRedeemCommand.couponCode());
             this.campaignCacheService.decrementCacheCampaignCounter(campaignCachedMetadata);
+            this.campaignCacheService.decrementCacheCustomerCounter(
+                    couponRedeemCommand.customerId(), campaignCachedMetadata.getCouponCode());
             throw new MaxRedemptionsReachedException("This campaign reached its maximum redemption");
         }
 

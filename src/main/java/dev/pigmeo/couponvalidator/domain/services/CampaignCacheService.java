@@ -16,7 +16,7 @@ import java.util.concurrent.locks.Lock;
 @Service
 public class CampaignCacheService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CampaignCacheService.class);
 
     private final static String CAMPAIGN_CACHE_LOCK_KEY = "campaign-write:";
     private final static String CAMPAIGNS_CACHE_KEY_PREFIX = "campaigns::";
@@ -79,8 +79,9 @@ public class CampaignCacheService {
         this.redisTemplate.opsForValue().decrement(campaignCounterRedisKey);
     }
 
-    public void decrementCacheCustomerCounter(Long customerId) {
-        final String customerCounterRedisKey = CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX + customerId;
+    public void decrementCacheCustomerCounter(Long customerId, String couponCode) {
+        final String customerCounterRedisKey =
+                CAMPAIGN_PER_USER_COUNTER_CACHE_KEY_PREFIX + ":" + couponCode + ":" + customerId;
 
         this.redisTemplate.opsForValue().decrement(customerCounterRedisKey);
     }

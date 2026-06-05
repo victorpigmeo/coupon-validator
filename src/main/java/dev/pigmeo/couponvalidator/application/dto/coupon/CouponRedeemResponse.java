@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 
 public record CouponRedeemResponse(
         BigDecimal originalAmount,
-        BigDecimal discountedAmount,
+        BigDecimal discount,
         short discountPercentage
 ) { }
